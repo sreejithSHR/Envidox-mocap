@@ -1,11 +1,7 @@
 /**
  *  SysMocap Main GUI (display when boot finish)
  *
- *  A part of SysMocap, open sourced under Mozilla Public License 2.0
- *
- *  https://github.com/xianfei/SysMocap
- *
- *  xianfei 2022.3
+
  */
 
 var ipcRenderer = null;
@@ -697,8 +693,8 @@ window.checkUpdate = () => {
 
     // version check options (for details see below)
 const options = {
-    repo: 'SysMocap',                    // repository name
-    owner: 'xianfei',                               // repository owner
+    repo: 'LiveTrack#4',                    // repository name
+    owner: 'Envidox-solutions',                               // repository owner
     currentVersion: 'v' + window.sysmocapApp.appVersion,                       // your app's current version
   };
   

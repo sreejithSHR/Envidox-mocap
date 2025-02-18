@@ -3,11 +3,7 @@
  *
  *  @usage import by ```const {getSettings,globalSettings,saveSettings} = require("../utils/setting.js")```
  *
- *  A part of SysMocap, open sourced under Mozilla Public License 2.0
- *
- *  https://github.com/xianfei/SysMocap
- *
- *  xianfei 2022.3
+
  */
 
 const storage = require("electron-localstorage");

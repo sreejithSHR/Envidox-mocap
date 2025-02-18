@@ -21,7 +21,6 @@
  */
 
 
-// modified by xianfei
 // add read pdf path from node env argv
 var pdfPath;
 for (var i = 0; i < process.argv.length; i++) {

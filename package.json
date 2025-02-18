@@ -17,7 +17,7 @@
     "msix64": "node buildmsi.js x64",
     "msixarm": "node buildmsi.js arm64"
   },
-  "author": "xianfei",
+  "author": "Envidox",
   "license": "ISC",
   "dependencies": {
     "@electron/remote": "^2.1.2",

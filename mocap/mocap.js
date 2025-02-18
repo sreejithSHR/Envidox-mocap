@@ -1,11 +1,6 @@
 /**
  *  Video-based Motion Capture and 3D Model Render Part
  *
- *  A part of SysMocap, open sourced under Mozilla Public License 2.0
- *
- *  https://github.com/xianfei/SysMocap
- *
- *  xianfei 2022.3
  */
 
 // import setting utils
@@ -179,6 +174,67 @@ const drawResults = (results) => {
         lineWidth: 2,
     });
 };
+
+const processVideoFrame = async () => {
+    let tempCanvas = document.createElement("canvas");
+    let tempCtx = tempCanvas.getContext("2d");
+
+    // Reduce the resolution for video files
+    tempCanvas.width = 640;  // Example: Half size
+    tempCanvas.height = 360;
+
+    tempCtx.drawImage(videoElement, 0, 0, tempCanvas.width, tempCanvas.height);
+    await holistic.send({ image: tempCanvas });
+
+    videoElement.requestVideoFrameCallback(processVideoFrame);
+};
+
+let motionData = [];
+
+const recordMotionData = (results) => {
+    let frameData = {
+        pose: results.poseLandmarks,
+        leftHand: results.leftHandLandmarks,
+        rightHand: results.rightHandLandmarks,
+        face: results.faceLandmarks,
+        timestamp: performance.now()
+    };
+    motionData.push(frameData);
+};
+
+const { BrowserWindow } = require("electron");
+
+let motionWindow;
+
+ipcRenderer.on("openMotionWindow", () => {
+    if (!motionWindow) {
+        motionWindow = new BrowserWindow({
+            width: 800,
+            height: 600,
+            webPreferences: {
+                nodeIntegration: true
+            }
+        });
+        motionWindow.loadURL("file://" + __dirname + "/motionViewer.html");
+    }
+    motionWindow.focus();
+});
+
+
+const exportToFBX = () => {
+    let scene = new THREE.Scene();
+    let skinnedMesh = createCharacterModel(); // Implement character selection
+
+    let exporter = new THREE.FBXExporter();
+    let fbxData = exporter.parse(scene);
+    let blob = new Blob([fbxData], { type: "application/octet-stream" });
+
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "motion.fbx";
+    a.click();
+};
+
 
 // switch use camera or video file
 if (localStorage.getItem("useCamera") == "camera") {

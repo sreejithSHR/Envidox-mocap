@@ -22,13 +22,13 @@ async function clean() {
 async function harness() {
     const msiCreator = new MSICreator({
         appDirectory: APP_DIR,
-        exe: "SysMocap.exe",
-        name: "SysMocap",
+        exe: "LiveTrack#4.exe",
+        name: "LiveTrack#4",
         arch: arch,
-        manufacturer: "Xianfei Wang",
+        manufacturer: "Envidox-Solutions",
         icon: path.join(APP_DIR, "../../icons/sysmocap.ico"),
         outputDirectory: OUT_DIR,
-        description: "Sysmocap",
+        description: "LiveTrack#4",
         ui: {
             chooseDirectory: true,
             images: {

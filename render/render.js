@@ -1,12 +1,7 @@
 /**
  *  Video-based Motion Capture and 3D Model Render Part
  *
- *  A part of SysMocap, open sourced under Mozilla Public License 2.0
- *
- *  https://github.com/xianfei/SysMocap
- *
- *  xianfei 2022.3, last modified 2024.7
- */
+
 
 // import setting utils
 const globalSettings = window.parent.window.sysmocapApp.settings;

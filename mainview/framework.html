@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>SysMocap</title>
+    <title>LiveTrack#4</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../fonts/fonts.css" />
     <link rel="stylesheet" href="style.css" />
@@ -92,7 +92,7 @@
             <div style="display: inline-block; position: relative;width: 200px;"
                 v-bind:style="{ marginLeft: platform=='darwin'?'88px':'28px'}">
                 <span class="text-titlebar-sysmocap">
-                    SysMocap
+                    LiveTrack#4
                 </span>
                 <div class="titlebar-ver">
                     Beta, v{{appVersion}}
@@ -343,6 +343,25 @@
                     <button class="mdui-btn xf-button" onclick="window.startMocap(this)" style="width: 120px;padding-right: 20px;">
                         <i class="mdui-icon material-icons">play_arrow</i>{{language.tabMocap.start}}
                     </button>
+                    <button class="mdui-btn xf-button" onclick="startRecording()" style="width: 120px; margin-left: 10px;">
+                        <i class="mdui-icon material-icons">fiber_manual_record</i> Start Recording
+                    </button>
+                
+                    <button class="mdui-btn xf-button" onclick="stopRecording()" style="width: 120px; margin-left: 10px;">
+                        <i class="mdui-icon material-icons">stop</i> Stop & Save
+                    </button>
+                
+                    <button class="mdui-btn xf-button" onclick="exportToBVH()" style="width: 120px; margin-left: 10px;">
+                        <i class="mdui-icon material-icons">file_download</i> Export BVH
+                    </button>
+                
+                    <button class="mdui-btn xf-button" onclick="exportToFBX()" style="width: 120px; margin-left: 10px;">
+                        <i class="mdui-icon material-icons">file_download</i> Export FBX
+                    </button>
+                
+                    <button class="mdui-btn xf-button" onclick="window.openMotionWindow()" style="width: 150px; margin-left: 10px;">
+                        <i class="mdui-icon material-icons">visibility</i> View Motion Data
+                    </button>
 
                     <div style="margin-top: 10px" v-show="videoSource == 'file'">
                         <button class="mdui-btn xf-button" id="chooseFile">
@@ -367,7 +386,7 @@
 
             <div v-show="tab=='settings'" style="max-width: 550px; margin: auto">
                 <div class="text-titlebar-sysmocap" style="font-size: 32px;-webkit-user-select: text; margin-top: 15px">
-                    SysMocap<span style="margin-left: 5px; font-size: 18px;">by xianfei</span>
+                    LiveTrack#4<span style="margin-left: 5px; font-size: 18px;"></span>
                 </div>
                 <div class="mdui-text-color-theme" style="-webkit-user-select: text;">
                     {{language.app.name}}
@@ -380,7 +399,7 @@
                             position: relative;
                         ">
                     <span class="material-icons-outlined" style="font-size: 16px;margin-left: 10px;"
-                        mdui-tooltip="{content: 'SysMocap Version'}">
+                        mdui-tooltip="{content: 'LiveTrack#4 Version'}">
                         widgets
                     </span>
                     <span style="
@@ -803,93 +822,7 @@
                         <input type="range" step="0.1" min="0" max="1" value="0.7" />
                     </label>
                 </div>
-                <!-- Setting Tab: About -->
-                <h1 class="mdui-text-color-theme" v-show="platform!=='web'">
-                    {{language.tabSettings.about.name}}
-                </h1>
-                <div class="settings-item">
-                    <div style="
-                                display: flex;
-                                align-content: space-between;
-                                justify-content: space-between;
-                                width: 100%;
-                            ">
-                        {{language.tabSettings.about.paper}}
-                    </div>
-                </div>
-                <div style="position: relative;height: 90px;">
-                    <div class="model-importer" style="
-                                width: 250px;
-                                height: 75px;
-                                padding: 5px;
-                                position:absolute;
-                                top: -15px;
-                                font-size: 14px;
-                                border-radius: 10px;
-                                left: -2px;
-                            ">
-                        <img src="../pdfs/ismar.png"
-                            style="box-shadow: #7773 -1px -1px 2px;width: 70px;position: absolute;top: 13px;display: block;right: -10px;border-radius: 5px 0 0 0;transform: rotate(10deg);">
-                        <div style="position: absolute;top: 6px;left: 10px;">
-                            <div style="font-size: 10px;margin-bottom: 5px;">ISMAR 2022</div>
-                            Real-time Expressive Avatar <br>Animation Generation...
-                            <div style="position: absolute;height: 20px;top: 55px;">
-                                <button onclick="ipcRenderer.send('openPDF','../pdfs/ismar.pdf')" class="mdui-btn xf-button-2" style="
-                                height: 15px !important;
-                                line-height: 14px !important;
-                                min-width: 30px;
-                                font-size: 8px;
-                            ">
-                                    <i class="mdui-icon material-icons"
-                                        style="font-size: 14px; margin-left: -8px;margin-bottom: -1px;">open_in_browser</i>
-                                    PDF
-                                </button>
-                                <button onclick="window.openInIEEE()" class="mdui-btn xf-button-2" style="
-                                height: 15px !important;
-                                line-height: 14px !important;
-                                min-width: 30px;
-                                font-size: 8px;
-                                margin-left: 10px;
-                            ">
-                                    <i class="mdui-icon material-icons"
-                                        style="font-size: 14px; margin-left: -8px;margin-bottom: -1px;">public</i>
-                                    IEEE
-                                </button>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="model-importer" style="
-                                width: 250px;
-                                height: 75px;
-                                padding: 5px;
-                                position:absolute;
-                                border-radius: 10px;
-                                font-size: 14px;
-                                top: -15px;
-                                left: 268px;
-                            "><img src="../pdfs/bylw.png"
-                            style="box-shadow: #7773 -1px -1px 2px;width: 70px;position: absolute;top: 15px;display: block;right: -10px;border-radius: 5px 0 0 0;transform: rotate(10deg);">
-                        <div style="position: absolute;top: 6px;left: 10px;">
-                            <div style="font-size: 10px;margin-bottom: 5px;">本科毕业论文（Chinese Only）</div>
-                            视频驱动虚拟角色动作的自动<br>生成系统的设计与实现
-                            <div style="position: absolute;height: 20px;top: 55px;">
-                                <button onclick="ipcRenderer.send('openPDF','../pdfs/bylw.pdf')" class="mdui-btn xf-button-2" style="
-                                height: 15px !important;
-                                line-height: 14px !important;
-                                min-width: 30px;
-                                font-size: 8px;
-                            ">
-                                    <i class="mdui-icon material-icons"
-                                        style="font-size: 14px; margin-left: -8px;margin-bottom: -1px;">open_in_browser</i>
-                                    PDF
-                                </button>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 <!-- Setting Tab: Dev -->
                 <h1 class="mdui-text-color-theme" v-show="platform!=='web'">
                     {{language.tabSettings.dev.name}}
