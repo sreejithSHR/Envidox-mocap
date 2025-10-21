@@ -21,6 +21,7 @@ import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import Stats from "three/addons/libs/stats.module.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
+import { BVHSerializer } from "../utils/exporters/BVHSerializer.js";
 
 // set theme
 document.body.setAttribute(
@@ -111,6 +112,8 @@ statsContainer.appendChild(stats2.dom);
 const clock = new THREE.Clock();
 
 var isRecordingStarted = false;
+var isBVHRecordingStarted = false;
+var bvhSerializer = new BVHSerializer();
 
 function animate() {
     requestAnimationFrame(animate);
@@ -523,6 +526,11 @@ const animateVRM = (vrm, results) => {
         riggedRightHand = Kalidokit.Hand.solve(rightHandLandmarks, "Right");
     }
 
+    // Record BVH frame data if recording is active
+    if (isBVHRecordingStarted) {
+        bvhSerializer.addFrame(riggedPose, riggedLeftHand, riggedRightHand, riggedFace);
+    }
+
     if (ipcRenderer)
         ipcRenderer.send("sendBoradcast", {
             type: "xf-sysmocap-data",
@@ -854,6 +862,19 @@ document.addEventListener("keydown", (event) => {
                 startRecording();
                 document.getElementById("recording").style.display = "";
             }
+            break;
+        case "b":
+            if (isBVHRecordingStarted) {
+                stopBVHRecording();
+            } else {
+                startBVHRecording();
+            }
+            break;
+        case "e":
+            if (bvhSerializer.frames.length > 0) {
+                exportBVH();
+            }
+            break;
     }
 });
 
@@ -923,3 +944,76 @@ function stopRecording() {
         }, 100);
     });
 }
+
+function startBVHRecording() {
+    isBVHRecordingStarted = true;
+    bvhSerializer.clear();
+    console.log("BVH recording started. Press 'B' to stop, 'E' to export.");
+
+    // Update button visibility
+    document.getElementById("bvh-record-btn").style.display = "none";
+    document.getElementById("bvh-stop-btn").style.display = "inline-block";
+    document.getElementById("bvh-export-btn").style.display = "none";
+
+    // Create UI indicator
+    const indicator = document.createElement("div");
+    indicator.id = "bvh-recording-indicator";
+    indicator.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #d32f2f;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        z-index: 10000;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    `;
+    indicator.textContent = "BVH Recording... (Press B to stop)";
+    document.body.appendChild(indicator);
+}
+
+function stopBVHRecording() {
+    isBVHRecordingStarted = false;
+    console.log(`BVH recording stopped. Captured ${bvhSerializer.frames.length} frames. Press 'E' to export.`);
+
+    // Update button visibility
+    document.getElementById("bvh-record-btn").style.display = "inline-block";
+    document.getElementById("bvh-stop-btn").style.display = "none";
+    if (bvhSerializer.frames.length > 0) {
+        document.getElementById("bvh-export-btn").style.display = "inline-block";
+    }
+
+    const indicator = document.getElementById("bvh-recording-indicator");
+    if (indicator) {
+        indicator.style.backgroundColor = "#388e3c";
+        indicator.textContent = `BVH Ready: ${bvhSerializer.frames.length} frames (Press E to export)`;
+    }
+}
+
+function exportBVH() {
+    try {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        const filename = `mocap_${timestamp}.bvh`;
+        bvhSerializer.exportToFile(filename);
+        console.log(`BVH exported as ${filename}`);
+
+        // Update button visibility
+        document.getElementById("bvh-export-btn").style.display = "none";
+
+        const indicator = document.getElementById("bvh-recording-indicator");
+        if (indicator) {
+            indicator.remove();
+        }
+        bvhSerializer.clear();
+    } catch (error) {
+        console.error("Failed to export BVH:", error);
+        alert("Failed to export BVH: " + error.message);
+    }
+}
+
+window.startBVHRecording = startBVHRecording;
+window.stopBVHRecording = stopBVHRecording;
+window.exportBVH = exportBVH;

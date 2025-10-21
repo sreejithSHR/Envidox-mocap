@@ -188,6 +188,46 @@
             >
             {{languages.render.rec}}
             </div>
+
+            <div
+                id="bvh-controls"
+                style="
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    display: flex;
+                    gap: 10px;
+                    z-index: 1000;
+                "
+            >
+                <button
+                    id="bvh-record-btn"
+                    onclick="startBVHRecording()"
+                    class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-red"
+                    style="border-radius: 20px;"
+                >
+                    <i class="mdui-icon material-icons">fiber_manual_record</i>
+                    Record BVH (B)
+                </button>
+                <button
+                    id="bvh-stop-btn"
+                    onclick="stopBVHRecording()"
+                    class="mdui-btn mdui-btn-raised mdui-ripple"
+                    style="border-radius: 20px; display: none;"
+                >
+                    <i class="mdui-icon material-icons">stop</i>
+                    Stop (B)
+                </button>
+                <button
+                    id="bvh-export-btn"
+                    onclick="exportBVH()"
+                    class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-green"
+                    style="border-radius: 20px; display: none;"
+                >
+                    <i class="mdui-icon material-icons">save_alt</i>
+                    Export (E)
+                </button>
+            </div>
         </div>
 
         <div id="status" style="position: absolute; bottom: 120px">
