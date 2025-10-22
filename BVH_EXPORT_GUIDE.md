@@ -100,15 +100,40 @@ The BVH export includes the following joints:
 - Check that the model is tracking properly
 - Try pressing B again to start recording
 
-**Animation looks wrong in 3D software?**
-- Try adjusting the scale (usually 0.01 or 100)
-- Check if your software needs axis conversion
-- Verify rotation order settings
+**Animation looks wrong in 3D software (bones stay in T-pose)?**
+
+This issue occurs when bone rotations aren't being properly read. To diagnose:
+
+1. **Check Console Logs**: Open Developer Tools (F12) and look for debug messages when:
+   - First frame is captured (shows bone data structure)
+   - BVH is exported (shows available bones and sample data)
+
+2. **Verify Motion Data**: The console will show if rotation data exists and its format:
+   ```
+   Hips: { rotation: { x: 0.1, y: 0.2, z: 0.3 }, position: { x: 0, y: 1, z: 0 } }
+   ```
+
+3. **Common Fixes**:
+   - Ensure video tracking is working (you should see skeleton overlay)
+   - Make sure character is moving during recording
+   - Try recording a longer sequence (at least 30 frames)
+   - Check that the 3D software scale is correct (0.01 or 100)
+   - Verify rotation order in your 3D software matches BVH (ZXY)
+
+4. **Import Settings**:
+   - **Blender**: Scale 0.01, Forward -Z, Up Y
+   - **Maya**: Scale 1.0, check "Automatic" for axis
+   - **Unity**: Should auto-detect, but verify humanoid rig if using
 
 **File not downloading?**
 - Check browser's download settings
 - Ensure you stopped recording before exporting
 - Try a different browser if issues persist
+
+**Rotations seem inverted or wrong axis?**
+- The BVH uses ZXY rotation order
+- Position data uses right-handed coordinate system (Y-up)
+- Some software may need axis remapping during import
 
 ## Known Limitations
 

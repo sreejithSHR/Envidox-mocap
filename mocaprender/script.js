@@ -529,6 +529,14 @@ const animateVRM = (vrm, results) => {
     // Record BVH frame data if recording is active
     if (isBVHRecordingStarted) {
         bvhSerializer.addFrame(riggedPose, riggedLeftHand, riggedRightHand, riggedFace);
+
+        // Debug log first frame to console
+        if (bvhSerializer.frames.length === 1) {
+            console.log("First frame captured - Sample data structure:");
+            console.log("riggedPose.Hips:", riggedPose?.Hips);
+            console.log("riggedPose.LeftUpperArm:", riggedPose?.LeftUpperArm);
+            console.log("riggedPose.RightUpperArm:", riggedPose?.RightUpperArm);
+        }
     }
 
     if (ipcRenderer)
